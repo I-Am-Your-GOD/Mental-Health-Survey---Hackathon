@@ -10,6 +10,7 @@
         color: #333; /* Default text color */
       }
 
+
       #questions-container {
         max-width: 600px;
         margin: auto;
@@ -18,6 +19,7 @@
         border-radius: 10px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
       }
+
 
       #result-container {
         max-width: 600px;
@@ -30,15 +32,18 @@
         margin-top: 20px;
       }
 
+
       h1,
       h2 {
         color: #333;
       }
 
+
       label {
         display: block;
         margin-bottom: 10px;
       }
+
 
       select {
         width: 100%;
@@ -47,6 +52,7 @@
         border: 1px solid #ccc;
         border-radius: 5px;
       }
+
 
       button {
         padding: 10px 20px;
@@ -58,9 +64,11 @@
         margin-right: 10px;
       }
 
+
       button:hover {
         background-color: #0056b3;
       }
+
 
       .feedback {
         margin-top: 20px;
@@ -69,21 +77,25 @@
         background-color: #f3f3f3;
       }
 
+
       .solution-suggestion {
         cursor: pointer;
         font-weight: bold;
         color: #007bff;
       }
 
+
       .solution-suggestion:hover {
         text-decoration: underline;
       }
+
 
       /* High contrast mode */
       body.high-contrast {
         background-color: black;
         color: black; /* All text in black */
       }
+
 
       body.high-contrast #questions-container,
       body.high-contrast #result-container,
@@ -93,22 +105,178 @@
         color: black; /* All text in black */
       }
 
+
       body.high-contrast select,
       body.high-contrast .solution-suggestion {
         background-color: black;
         color: white;
       }
 
+
       /* Zoom mode */
       body.zoom-in {
         zoom: 1.2;
       }
 
+
       body.zoom-out {
         zoom: 0.8;
       }
     </style>
+    <script>
+        let score = 0;
+ 
+        function resetQuestionnaire() {
+          // Reset each select element to its initial state (first option selected)
+          document.querySelectorAll("select").forEach((select) => {
+            select.selectedIndex = 0;
+          });
+ 
+          // Clear result text and solution list
+          document.getElementById("result-text").innerText = "";
+          document.getElementById("solution-list").innerHTML = "";
+ 
+          // Hide the result container
+          document.getElementById("result-container").style.display = "none";
+ 
+          score = 0;
+        }
+ 
+        function calculateResult() {
+          var q1 = parseInt(document.getElementById("q1").value);
+          var q2 = parseInt(document.getElementById("q2").value);
+          var q3 = parseInt(document.getElementById("q3").value);
+          var q4 = parseInt(document.getElementById("q4").value);
+          var q5 = parseInt(document.getElementById("q5").value);
+          var q6 = parseInt(document.getElementById("q6").value);
+          var q7 = parseInt(document.getElementById("q7").value);
+          var q8 = parseInt(document.getElementById("q8").value);
+          var q9 = parseInt(document.getElementById("q9").value);
+          var q10 = parseInt(document.getElementById("q10").value);
+ 
+          if (
+            isNaN(q1) ||
+            isNaN(q2) ||
+            isNaN(q3) ||
+            isNaN(q4) ||
+            isNaN(q5) ||
+            isNaN(q6) ||
+            isNaN(q7) ||
+            isNaN(q8) ||
+            isNaN(q9) ||
+            isNaN(q10)
+          ) {
+            alert("Please answer all questions before submitting.");
+            return;
+          }
+ 
+          score = q1 + q2 + q3 + q4 + q5 + q6 + q7 + q8 + q9 + q10;
+ 
+          var resultText = "";
+          var solutions = [];
+ 
+          if (score <= 5) {
+            resultText = "You appear to have low levels of stress or depression.";
+            solutions.push(
+              "Practice stress management techniques such as deep breathing or meditation.",
+            );
+            if (q1 > 1 || q2 > 1) {
+              solutions.push(
+                "Consider engaging in activities that bring you joy or relaxation.",
+              );
+            }
+          } else if (score <= 10) {
+            resultText =
+              "You may be experiencing moderate levels of stress or depression.";
+            solutions.push(
+              "Consider talking to a trusted friend or family member about your feelings.",
+            );
+            solutions.push(
+              "Seek professional help from a counselor or therapist.",
+            );
+            if (q1 > 1 || q2 > 1 || q3 > 1) {
+              solutions.push(
+                "Maintain a regular sleep schedule and practice good sleep hygiene.",
+              );
+            }
+          } else {
+            resultText =
+              "You are likely experiencing high levels of stress or depression.";
+            solutions.push(
+              "Reach out to a mental health professional immediately for support.",
+            );
+            solutions.push(
+              "Consider reaching out to a crisis hotline for immediate assistance. Call 9-8-8!",
+            );
+            if (
+              q1 > 1 ||
+              q2 > 1 ||
+              q3 > 1 ||
+              q4 > 1 ||
+              q5 > 1 ||
+              q6 > 1 ||
+              q7 > 1 ||
+              q8 > 1 ||
+              q9 > 1 ||
+              q10 > 1
+            ) {
+              solutions.push(
+                "Focus on self-care activities such as exercise, healthy eating, and relaxation techniques.",
+              );
+            }
+          }
+ 
+          document.getElementById("result-text").innerText = resultText;
+ 
+          var solutionList = document.getElementById("solution-list");
+          solutionList.innerHTML = "";
+          solutions.forEach(function (solution) {
+            var listItem = document.createElement("li");
+            listItem.innerText = solution;
+            solutionList.appendChild(listItem);
+          });
+ 
+          var feedbackContainer = document.getElementById("feedback-container");
+          feedbackContainer.innerHTML = "";
+          if (score > 10) {
+            var feedback = document.createElement("p");
+            feedback.innerText =
+              "Your responses indicate that you may benefit from professional help. Click ";
+            var suggestionLink = document.createElement("span");
+            suggestionLink.innerText = "here";
+            suggestionLink.className = "solution-suggestion";
+            suggestionLink.onclick = function () {
+              window.location.href =
+                "https://www.dhs.state.il.us/page.aspx?item=145089&gad_source=1&gclid=EAIaIQobChMIucOmkp6xhQMVfzbUAR2xMgO4EAAYASAAEgKXaPD_BwE";
+            };
+            feedback.appendChild(suggestionLink);
+            feedback.appendChild(document.createTextNode(" to find resources."));
+            feedbackContainer.appendChild(feedback);
+          }
+ 
+          document.getElementById("result-container").style.display = "block";
+        }
+ 
+        function toggleHighContrast() {
+          document.body.classList.toggle("high-contrast");
+        }
+ 
+        function zoomIn() {
+          document.body.classList.add("zoom-in");
+          document.body.classList.remove("zoom-out");
+        }
+ 
+        function zoomOut() {
+          document.body.classList.add("zoom-out");
+          document.body.classList.remove("zoom-in");
+        }
+ 
+        function resetZoom() {
+          document.body.classList.remove("zoom-in", "zoom-out");
+        }
+      </script>
   </head>
+
 
   <body>
     <div id="accessibility-options">
@@ -135,6 +303,7 @@
         <option value="3">Often</option>
       </select>
 
+
       <label for="q2"
         >2. Do you have trouble sleeping or sleep excessively?</label
       >
@@ -144,6 +313,7 @@
         <option value="1">Occasionally</option>
         <option value="2">Frequently</option>
       </select>
+
 
       <label for="q3"
         >3. Are you experiencing changes in appetite or weight?</label
@@ -155,6 +325,7 @@
         <option value="2">Frequently</option>
       </select>
 
+
       <label for="q4">4. How would you rate your energy levels?</label>
       <select id="q4">
         <option value="">Choose an option</option>
@@ -163,6 +334,7 @@
         <option value="2">Very low</option>
       </select>
 
+
       <label for="q5">5. Do you find it difficult to concentrate?</label>
       <select id="q5">
         <option value="">Choose an option</option>
@@ -170,6 +342,7 @@
         <option value="1">Occasionally</option>
         <option value="2">Frequently</option>
       </select>
+
 
       <label for="q6"
         >6. Are you experiencing a loss of interest in activities you used to
@@ -182,6 +355,7 @@
         <option value="2">Frequently</option>
       </select>
 
+
       <label for="q7">7. Have you been feeling restless or irritable?</label>
       <select id="q7">
         <option value="">Choose an option</option>
@@ -189,6 +363,7 @@
         <option value="1">Occasionally</option>
         <option value="2">Frequently</option>
       </select>
+
 
       <label for="q8"
         >8. Do you experience physical symptoms such as headaches or
@@ -201,6 +376,7 @@
         <option value="2">Frequently</option>
       </select>
 
+
       <label for="q9">9. How do you perceive your overall mood?</label>
       <select id="q9">
         <option value="">Choose an option</option>
@@ -208,6 +384,7 @@
         <option value="1">Mildly negative</option>
         <option value="2">Very negative</option>
       </select>
+
 
       <label for="q10"
         >10. Have you had thoughts of self-harm or suicide?</label
@@ -219,174 +396,27 @@
         <option value="2">Frequently</option>
       </select>
 
+
       <button onclick="calculateResult()">Submit</button>
     </div>
+
 
     <div id="result-container">
       <h2>Result:</h2>
       <p id="result-text"></p>
 
+
       <div class="feedback" id="feedback-container">
         <!-- Feedback will be added here -->
       </div>
+
 
       <h2>Solutions:</h2>
       <ul id="solution-list">
         <!-- Solutions will be added here -->
       </ul>
     </div>
-
-    <script>
-      let score = 0;
-
-      function resetQuestionnaire() {
-        // Reset each select element to its initial state (first option selected)
-        document.querySelectorAll("select").forEach((select) => {
-          select.selectedIndex = 0;
-        });
-
-        // Clear result text and solution list
-        document.getElementById("result-text").innerText = "";
-        document.getElementById("solution-list").innerHTML = "";
-
-        // Hide the result container
-        document.getElementById("result-container").style.display = "none";
-
-        score = 0;
-      }
-
-      function calculateResult() {
-        var q1 = parseInt(document.getElementById("q1").value);
-        var q2 = parseInt(document.getElementById("q2").value);
-        var q3 = parseInt(document.getElementById("q3").value);
-        var q4 = parseInt(document.getElementById("q4").value);
-        var q5 = parseInt(document.getElementById("q5").value);
-        var q6 = parseInt(document.getElementById("q6").value);
-        var q7 = parseInt(document.getElementById("q7").value);
-        var q8 = parseInt(document.getElementById("q8").value);
-        var q9 = parseInt(document.getElementById("q9").value);
-        var q10 = parseInt(document.getElementById("q10").value);
-
-        if (
-          isNaN(q1) ||
-          isNaN(q2) ||
-          isNaN(q3) ||
-          isNaN(q4) ||
-          isNaN(q5) ||
-          isNaN(q6) ||
-          isNaN(q7) ||
-          isNaN(q8) ||
-          isNaN(q9) ||
-          isNaN(q10)
-        ) {
-          alert("Please answer all questions before submitting.");
-          return;
-        }
-
-        score = q1 + q2 + q3 + q4 + q5 + q6 + q7 + q8 + q9 + q10;
-
-        var resultText = "";
-        var solutions = [];
-
-        if (score <= 5) {
-          resultText = "You appear to have low levels of stress or depression.";
-          solutions.push(
-            "Practice stress management techniques such as deep breathing or meditation.",
-          );
-          if (q1 > 1 || q2 > 1) {
-            solutions.push(
-              "Consider engaging in activities that bring you joy or relaxation.",
-            );
-          }
-        } else if (score <= 10) {
-          resultText =
-            "You may be experiencing moderate levels of stress or depression.";
-          solutions.push(
-            "Consider talking to a trusted friend or family member about your feelings.",
-          );
-          solutions.push(
-            "Seek professional help from a counselor or therapist.",
-          );
-          if (q1 > 1 || q2 > 1 || q3 > 1) {
-            solutions.push(
-              "Maintain a regular sleep schedule and practice good sleep hygiene.",
-            );
-          }
-        } else {
-          resultText =
-            "You are likely experiencing high levels of stress or depression.";
-          solutions.push(
-            "Reach out to a mental health professional immediately for support.",
-          );
-          solutions.push(
-            "Consider reaching out to a crisis hotline for immediate assistance. Call 9-8-8!",
-          );
-          if (
-            q1 > 1 ||
-            q2 > 1 ||
-            q3 > 1 ||
-            q4 > 1 ||
-            q5 > 1 ||
-            q6 > 1 ||
-            q7 > 1 ||
-            q8 > 1 ||
-            q9 > 1 ||
-            q10 > 1
-          ) {
-            solutions.push(
-              "Focus on self-care activities such as exercise, healthy eating, and relaxation techniques.",
-            );
-          }
-        }
-
-        document.getElementById("result-text").innerText = resultText;
-
-        var solutionList = document.getElementById("solution-list");
-        solutionList.innerHTML = "";
-        solutions.forEach(function (solution) {
-          var listItem = document.createElement("li");
-          listItem.innerText = solution;
-          solutionList.appendChild(listItem);
-        });
-
-        var feedbackContainer = document.getElementById("feedback-container");
-        feedbackContainer.innerHTML = "";
-        if (score > 10) {
-          var feedback = document.createElement("p");
-          feedback.innerText =
-            "Your responses indicate that you may benefit from professional help. Click ";
-          var suggestionLink = document.createElement("span");
-          suggestionLink.innerText = "here";
-          suggestionLink.className = "solution-suggestion";
-          suggestionLink.onclick = function () {
-            window.location.href =
-              "https://www.dhs.state.il.us/page.aspx?item=145089&gad_source=1&gclid=EAIaIQobChMIucOmkp6xhQMVfzbUAR2xMgO4EAAYASAAEgKXaPD_BwE";
-          };
-          feedback.appendChild(suggestionLink);
-          feedback.appendChild(document.createTextNode(" to find resources."));
-          feedbackContainer.appendChild(feedback);
-        }
-
-        document.getElementById("result-container").style.display = "block";
-      }
-
-      function toggleHighContrast() {
-        document.body.classList.toggle("high-contrast");
-      }
-
-      function zoomIn() {
-        document.body.classList.add("zoom-in");
-        document.body.classList.remove("zoom-out");
-      }
-
-      function zoomOut() {
-        document.body.classList.add("zoom-out");
-        document.body.classList.remove("zoom-in");
-      }
-
-      function resetZoom() {
-        document.body.classList.remove("zoom-in", "zoom-out");
-      }
-    </script>
   </body>
 </html>
+
+
